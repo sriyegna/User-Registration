@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Lab2 Part A</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+		<h1>Registration Page</h1>
+	
+		<form class="form-horizontal">
+			<div id="nameFormGroup" class="form-group">
+				<label for="name" class="control-label col-sm-2">Student Name:</label>
+				<div class="col-sm-6">
+					<input type="text" class="fieldInput form-control" id="name">
+					<span id="nameIcon"></span>
+				</div>
+				<h5 id="nameAlert"></h5>
+			</div>
+			<div id="studentIDFormGroup" class="form-group">
+				<label for="studentID" class="control-label col-sm-2">Student ID:</label>
+				<div class="col-sm-6">
+					<input type="text" class="fieldInput form-control" id="studentID">
+					<span id="studentIDIcon"></span>
+				</div>
+				<h5 id="studentIDAlert"></h5>
+			</div>
+			<div id="programFormGroup" class="form-group">
+				<label for="program" class="control-label col-sm-2">Program:</label>
+				<div class="col-sm-6">
+					<input type="text" class="fieldInput form-control" id="program">
+					<span id="programIcon"></span>
+				</div>
+				<h5 id="programAlert"></h5>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2"></div>
+				<button type="button" id="submitButton" class="btn btn-primary col-sm-1">Submit</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="studentTable" class="table table-bordered">
+		<tr>
+			<th>Student Name</th>
+			<th>Student ID</th>
+			<th>Program</th>
+		</tr>
+	</table>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+	<script>
+	  $(document).ready( function()
+	  {
+		var nameIsValid = false;
+		var nameHasWarning = false;
+		var studentIDIsValid = false;
+		var studentIDHasWarning = false;
+		var programIsValid = false;
+		var programHasWarning = false;
+	    $(".fieldInput").keyup( function()
+		{
+		  $.post(
+		    "parta.php",
+		    { "name" : $("#name").val(), "studentID" : $("#studentID").val(), "program" : $("#program").val() },
+			function (data)
+			{
+			  var studentInfo = JSON.parse(data);
+			  $("#nameFormGroup").removeClass("has-warning has-success has-error has-feedback");
+			  $("#nameIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+			  nameHasWarning = false;
+			  if (studentInfo.name == 1)
+			  {
+				$("#nameFormGroup").addClass("has-warning has-feedback");
+				$("#nameIcon").addClass("glyphicon-warning-sign glyphicon form-control-feedback");
+				nameIsValid = true;
+				nameHasWarning = true;
+				$("#nameAlert").html("Student name may be fictitious.").addClass("text-warning");
+			  }
+			  else if (studentInfo.name == 2)
+			  {
+			    $("#nameFormGroup").addClass("has-error has-feedback");
+				$("#nameIcon").addClass("glyphicon-remove glyphicon form-control-feedback");
+				nameIsValid = false;
+				$("#nameAlert").html("Student name cannot contain digits.").addClass("text-danger");
+			  }			  
+			  else if (studentInfo.name == 3)
+			  {
+			    $("#nameFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#nameIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				nameIsValid = false;
+				$("#nameAlert").html("");
+			  }			
+			  else {
+			    $("#nameFormGroup").addClass("has-success has-feedback");
+				$("#nameIcon").addClass("glyphicon-ok glyphicon form-control-feedback");
+				nameIsValid = true;
+				$("#nameAlert").html("");
+			  }
+			  
+			  
+			  $("#studentIDFormGroup").removeClass("has-warning has-success has-error has-feedback");
+			  $("#studentIDIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+			  studentIDHasWarning = false;
+			  if (studentInfo.studentID == 1)
+			  {
+				$("#studentIDFormGroup").addClass("has-warning has-feedback");
+				$("#studentIDIcon").addClass("glyphicon-warning-sign glyphicon form-control-feedback");
+				studentIDIsValid = true;
+				studentIDHasWarning = true;
+				$("#studentIDAlert").html("Student ID is suspicious.").addClass("text-warning");
+			  }
+			  else if (studentInfo.studentID == 2)
+			  {
+				$("#studentIDFormGroup").addClass("has-error has-feedback");
+				$("#studentIDIcon").addClass("glyphicon-remove glyphicon form-control-feedback");
+				studentIDIsValid = false;
+				$("#studentIDAlert").html("Student ID must only contain digits.").addClass("text-danger");
+				
+			  }			  
+			  else if (studentInfo.studentID == 3)
+			  {
+			    $("#studentIDFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#studentIDIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				studentIDIsValid = false;
+				$("#studentIDAlert").html("");
+			  }			
+			  else {
+			    $("#studentIDFormGroup").addClass("has-success has-feedback");
+				$("#studentIDIcon").addClass("glyphicon-ok glyphicon form-control-feedback");
+				studentIDIsValid = true;
+				$("#studentIDAlert").html("");
+			  }
+			  
+			 
+			  $("#programFormGroup").removeClass("has-warning has-success has-error has-feedback");
+			  $("#programIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+			  programHasWarning = false;
+			  if (studentInfo.program == 1)
+			  {
+				$("#programFormGroup").addClass("has-warning has-feedback");
+				$("#programIcon").addClass("glyphicon-warning-sign glyphicon form-control-feedback");
+				programIsValid = true;
+				programHasWarning = true;
+				$("#programAlert").html("Program may be fictitious.").addClass("text-warning");
+			  }
+			  else if (studentInfo.program == 2)
+			  {
+			    $("#programFormGroup").addClass("has-error has-feedback");
+				$("#programIcon").addClass("glyphicon-remove glyphicon form-control-feedback");
+				programIsValid = false;
+				$("#programAlert").html("Program does not exist.").addClass("text-danger");
+			  }			  
+			  else if (studentInfo.program == 3)
+			  {
+			    $("#programFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#programIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				programIsValid = false;
+				$("#programAlert").html("");
+			  }			
+			  else {
+			    $("#programFormGroup").addClass("has-success has-feedback");
+				$("#programIcon").addClass("glyphicon-ok glyphicon form-control-feedback");
+				programIsValid = true;
+				$("#programAlert").html("");
+			  }
+			}
+		  )
+		});
+		
+		
+		$("#submitButton").click(function() {
+			if (nameIsValid && studentIDIsValid && programIsValid) {
+				nameIsValid = false;
+				studentIDIsValid = false;
+				programIsValid = false;
+				$("#nameFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#nameIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				$("#studentIDFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#studentIDIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				$("#programFormGroup").removeClass("has-warning has-success has-error has-feedback");
+				$("#programIcon").removeClass("glyphicon-warning-sign glyphicon-remove glyphicon-ok glyphicon form-control-feedback");
+				$("#nameAlert").html("");
+				$("#studentIDAlert").html("");
+				$("#programAlert").html("");
+			  
+				
+			  
+				if (nameHasWarning || studentIDHasWarning || programHasWarning) {
+					$("#studentTable").append("<tr class='warning'><td>" + $("#name").val() + "</td><td>" + $("#studentID").val() + "</td><td>" + $("#program").val() + "</td></tr>");
+				}
+				else {
+					$("#studentTable").append("<tr><td>" + $("#name").val() + "</td><td>" + $("#studentID").val() + "</td><td>" + $("#program").val() + "</td></tr>");
+				}
+				
+				studentIDHasWarning = false;
+				programIsValid = false;
+				programHasWarning = false;
+				$("#name").val("");
+				$("#studentID").val("");
+				$("#program").val("");
+			}
+		});
+		
+		
+	  });
+	</script>
+  </body>
+</html>
